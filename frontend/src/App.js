@@ -5,3 +5,5 @@ export default function App() {
     </h1>
   )
 }
+mongo="mongodb+srv://keshavsaini1234567890:keshav@socialmedia.yy0ml2k.mongodb.net/?retryWrites=true&w=majority&appName=socialmedia"
+JWT_SECRET="PrimeTime"
