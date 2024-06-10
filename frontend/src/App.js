@@ -1,7 +1,15 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SignIn from "./pages/SignIn";
+
 export default function App() {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<SignIn/>}/>
+        
+      </Routes>
+    </BrowserRouter>
+    </>
   )
 }
