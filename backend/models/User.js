@@ -30,7 +30,7 @@ const userSchema=new mongoose.Schema(
 
 	},
 	dateOfBirth: {
-		type: String,
+		type: Date,
 	},
     avatar:{
         type: String,

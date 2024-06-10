@@ -2,6 +2,15 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import UserRouter from './routes/User.js';
+import cors from 'cors';
+
+
+const corsOptions = {
+    origin: '*',
+    credentials: true,            //access-control-allow-credentials:true
+    optionSuccessStatus: 200
+}
+
 
 
 dotenv.config();
@@ -19,7 +28,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/user",UserRouter);
+app.use(cors(corsOptions));
+
+app.use("/auth",UserRouter);
 
 
 

@@ -26,7 +26,7 @@ import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
     try {
       
         dispatch(signInStart());
-         const res= await fetch('/api/auth/signin',
+         const res= await fetch("http://localhost:5000/auth/login",
          {
            method:'POST',
            headers:{
@@ -41,7 +41,7 @@ import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
            return;
          }
          dispatch(signInSuccess(data));
-         navigate('/');
+         navigate('/home');
          console.log(data);
        } catch (error) {
          dispatch(signInFailure(error.message));
@@ -94,7 +94,7 @@ import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
           </div>
           <Link
               className="pt-3 inline-block align-baseline font-bold text-sm text-green-700 hover:text-emerald-600"
-              to="/forgot-password"
+              to="/sign-up"
             >
               Create Account
             </Link>
