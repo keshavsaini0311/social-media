@@ -175,6 +175,12 @@ import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
             >
               Sign Up
             </button>
+          <Link
+              className="pt-3 inline-block align-baseline font-bold text-sm text-green-700 hover:text-emerald-600"
+              to="/"
+            >
+              Already have an Account
+            </Link>
           </div>
         </form>
       </div>
