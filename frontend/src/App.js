@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import PrivateRoute from "./components/PrivateRoute";
 import SignUp from "./pages/SignUp";
 import { Messaging } from "./pages/Messaging";
+import Message from "./pages/Message";
 
 export default function App() {
   return (
@@ -13,9 +14,7 @@ export default function App() {
         <Route path="/sign-up" element={<SignUp/>}/>
         <Route path='/' element={<Messaging/>}/>
         <Route element={<PrivateRoute />}>
-
-        
-          
+          <Route path='/messages' element={<Message/>}/>
           <Route path='/home' element={<Home/>}/>
         </Route> 
       </Routes>
