@@ -3,12 +3,11 @@ import jwt from "jsonwebtoken";
 
 const protectRoute = async (req, res, next) => {
 	const token=req.cookies.token
-    
     if(!token){
-        return next(errorHandler(401,'Unauthorized'));
+        return res.status(401).json({ message: "Unauthorized" });
     }
     jwt.verify(token,process.env.JWT_SECRET,(err,user)=>{
-        if(err) return next(errorHandler(403,'Forbidden'));
+        if(err) return res.status(401).json({ message: "Unauthorized" });
         req.user=user;
         next();
     })

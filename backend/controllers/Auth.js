@@ -77,8 +77,6 @@ export const login=async(req,res)=>{
 					expiresIn: "24h",
 				}
 			);
-
-       
         user.token = token;
         user.password = undefined;
         // Set cookie for token and return success response
