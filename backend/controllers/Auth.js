@@ -77,8 +77,6 @@ export const login=async(req,res)=>{
 					expiresIn: "24h",
 				}
 			);
-
-       
         user.token = token;
         user.password = undefined;
         // Set cookie for token and return success response
@@ -86,7 +84,6 @@ export const login=async(req,res)=>{
             expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
             httpOnly: true,
         };
-        console.log(token);
         res.cookie("token", token, options).status(200).json({
             success: true,
             token,
@@ -110,7 +107,7 @@ export const login=async(req,res)=>{
 }
 export const signout = async (req, res, next) => {
     try {
-        res.clearCookie('access_token');
+        res.clearCookie('jwt');
         res.status(200).json('User has been logged out!');
     } catch (error) {
         console.log(error);
