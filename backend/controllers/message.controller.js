@@ -1,7 +1,8 @@
 import Conversation from "../models/conversationModel.js";
 import Message from "../models/messageModel.js";
-import { getRecipientSocketId, io } from "../sockets-backend/sockets.js";
+import { getRecipientSocketId, io } from "../socket-backend/socket.js";
 import { v2 as cloudinary } from "cloudinary";
+import { errorHandler } from '../utils/error.js';
 
 async function sendMessage(req, res) {
 	try {
@@ -53,7 +54,7 @@ async function sendMessage(req, res) {
 
 		res.status(201).json(newMessage);
 	} catch (error) {
-		res.status(500).json({ error: error.message });
+		next(error);
 	}
 }
 
@@ -66,7 +67,7 @@ async function getMessages(req, res) {
 		});
 
 		if (!conversation) {
-			return res.status(404).json({ error: "Conversation not found" });
+			return next(errorHandler(404,'Conversation not found!'));
 		}
 
 		const messages = await Message.find({
@@ -75,7 +76,7 @@ async function getMessages(req, res) {
 
 		res.status(200).json(messages);
 	} catch (error) {
-		res.status(500).json({ error: error.message });
+		next(err);
 	}
 }
 
@@ -92,10 +93,10 @@ async function getConversations(req, res) {
 			conversation.participants = conversation.participants.filter(
 				(participant) => participant._id.toString() !== userId.toString()
 			);
-		});
+		}); 
 		res.status(200).json(conversations);
 	} catch (error) {
-		res.status(500).json({ error: error.message });
+		next(err);
 	}
 }
 

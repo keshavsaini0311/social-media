@@ -1,50 +1,70 @@
-import path from "path";
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import userRoutes from "./routes/User.js";
-import messageRoutes from "./routes/messageRoutes.js";
-import { v2 as cloudinary } from "cloudinary";
-import { app, server } from "./sockets-backend/sockets.js";
-import cors from "cors";
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
+import AuthRouter from './routes/auth.route.js';
+import MessageRouter from './routes/message.route.js';
+import cors from 'cors';
+import http from 'http';
+import { Server } from 'socket.io';
+
+
+const corsOptions = {
+    origin: '*',
+    credentials: true,            
+    optionSuccessStatus: 200
+}
 
 dotenv.config();
 
 mongoose.connect(process.env.mongo).then(()=>{
-  console.log("connected");
+    console.log("connected");
 }).catch((err)=>{
-  console.log(err);
+    console.log(err);
 })
 
-const PORT = process.env.PORT || 5000;
-const __dirname = path.resolve();
 
-cloudinary.config({
-	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-	api_key: process.env.CLOUDINARY_API_KEY,
-	api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-// Middlewares
-app.use(express.json({ limit: "50mb" })); // To parse JSON data in the req.body
-app.use(express.urlencoded({ extended: true })); // To parse form data in the req.body
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(corsOptions));
 
-// Routes
-app.use("/auth", userRoutes);
-app.use("/messages", messageRoutes);
+app.use("/api/auth",AuthRouter);
+app.use("/api/messages",MessageRouter);
 
-// http://localhost:5000 => backend,frontend
+const server=http.createServer(app);
 
-if (process.env.NODE_ENV === "production") {
-	app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-	// react app
-	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-	});
-}
+const io = new Server(server, {
+    cors: {
+      origin: "http://localhost:5173",
+      methods: ["GET", "POST"],
+    },
+  });
+  
+  io.on("connection", (socket) => {
+    console.log(`User Connected: ${socket.id}`);
+  
+    socket.on("join_room", (data) => {
+      socket.join(data);
+    });
+  
+    socket.on("send_message", (data) => {
+      socket.to(data.room).emit("receive_message", data);
+    });
+  });
+  
+  server.listen(5000, () => {
+    console.log("SERVER IS RUNNING");
+  });
 
-server.listen(PORT, () => console.log(`Server started at http://localhost:${PORT}`));
+  app.use((err,req,res,next)=>{
+    const statuscode=err.statuscode || 500;
+    const message=err.message || "Internal server error";
+    return res.status(statuscode).json({
+        success: false,
+        statuscode,
+        message,
+    });
+});

@@ -26,7 +26,7 @@ import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
     try {
       
         dispatch(signInStart());
-         const res= await fetch("http://localhost:5000/auth/login",
+         const res= await fetch("/api/auth/signin",
          {
            method:'POST',
            headers:{
@@ -38,6 +38,7 @@ import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
          const data =await res.json();
          if(data.success===false){
            dispatch(signInFailure(data.message));
+           console.log(data.message);
            return;
          }
          dispatch(signInSuccess(data));
@@ -80,7 +81,7 @@ import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
           <div className="flex items-center justify-between">
             <button
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="button"
+              type="submit"
               onClick={handleSubmit}
             >
               Sign In
