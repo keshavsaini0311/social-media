@@ -4,10 +4,9 @@ import { verifyToken } from '../utils/verifyUSer.js';
 
 const router=express.Router();
 
-router.get('/test',test);
+router.get('/search',getUsername);
 router.post('/update/:id',verifyToken,updateUser);
 router.delete('/delete/:id',verifyToken,deleteUser);
 router.get('/:id',verifyToken,getUser);
-router.get('/get/:username',getUsername);
 
 export default router;

@@ -70,8 +70,12 @@ export const getUser = async (req, res, next) => {
 
 export const getUsername = async (req, res, next) => {
     try {
+        const limit = parseInt(req.query.limit) || 9;
+        const startIndex = parseInt(req.query.startIndex) || 0;
+        const searchTerm = req.query.searchTerm || '';
         const users = await User.find({
-            userName: { $regex: req.params.username||'' },
+            userName: { $regex: searchTerm, $options: 'i' },
+            
         });
         if (!users) return next(errorHandler(404, 'User not found!'));
 
