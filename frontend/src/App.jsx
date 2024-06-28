@@ -14,8 +14,8 @@ export default function App() {
     <Routes>
       <Route path='/' element={<SignIn/>}/>
       <Route path='/sign-up' element={<SignUp/>}/>
-      <Route path='/profile' element={<Profile/>}/>
       <Route element={<PrivateRoute/>}>
+      <Route path='/update-profile' element={<Profile/>}/>
       <Route path='/home' element={<Home/>}/>
       <Route path='/messages' element={<ChatPage/>}/>
       </Route>

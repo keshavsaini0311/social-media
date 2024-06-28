@@ -67,3 +67,16 @@ export const getUser = async (req, res, next) => {
         next(error);
     }
 }
+
+export const getUsername = async (req, res, next) => {
+    try {
+        const users = await User.find({
+            userName: { $regex: req.params.username||'' },
+        });
+        if (!users) return next(errorHandler(404, 'User not found!'));
+
+        res.status(200).json(users);
+    } catch (error) {
+        next(error);
+    }
+}
