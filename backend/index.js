@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import AuthRouter from './routes/auth.route.js';
 import MessageRouter from './routes/message.route.js';
+import UserRouter from './routes/user.route.js';
 import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
@@ -32,6 +33,7 @@ app.use(cors(corsOptions));
 
 app.use("/api/auth",AuthRouter);
 app.use("/api/messages",MessageRouter);
+app.use("/api/user", UserRouter);
 
 const server=http.createServer(app);
 

@@ -5,6 +5,7 @@ import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import Home from './pages/Home'
 import ChatPage from './pages/ChatPage'
+import Profile from './pages/Profile'
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
     <Routes>
       <Route path='/' element={<SignIn/>}/>
       <Route path='/sign-up' element={<SignUp/>}/>
+      <Route path='/profile' element={<Profile/>}/>
       <Route element={<PrivateRoute/>}>
       <Route path='/home' element={<Home/>}/>
       <Route path='/messages' element={<ChatPage/>}/>

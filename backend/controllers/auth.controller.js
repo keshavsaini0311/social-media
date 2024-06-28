@@ -4,10 +4,10 @@ import { errorHandler } from '../utils/error.js';
 import  jwt from "jsonwebtoken";
 
 export const signup=async(req,res,next)=>{
-    const{firstName,lastName,email,password,dateOfBirth,gender,contactNumber,confirmPassword}=req.body;
+    const{userName, firstName,lastName,email,password,dateOfBirth,gender,contactNumber,confirmPassword}=req.body;
     if(password!==confirmPassword)return next(errorHandler(400,'password do not match!'));
     const hashedpassword=bcryptjs.hashSync(password,10);
-    const newUser= new User({firstName,lastName,dateOfBirth,gender,contactNumber,email,password:hashedpassword});
+    const newUser= new User({ userName,firstName,lastName,dateOfBirth,gender,contactNumber,email,password:hashedpassword});
     try{
     await  newUser.save();
     res.status(201).json("user created ");
