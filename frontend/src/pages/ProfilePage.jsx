@@ -20,7 +20,6 @@ const ProfilePage = () => {
             }
             setUser(data);
             setError(false);
-            console.log(data);
             setLoading(false);
           } catch (error) {
             setError(true);

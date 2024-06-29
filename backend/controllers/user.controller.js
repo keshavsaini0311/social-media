@@ -78,7 +78,7 @@ export const getUsername = async (req, res, next) => {
             
         });
         if (!users) return next(errorHandler(404, 'User not found!'));
-
+        users.map((user) => { user.password = undefined; });
         res.status(200).json(users);
     } catch (error) {
         next(error);
