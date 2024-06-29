@@ -18,7 +18,8 @@ export const updateUser=async(req,res,next)=>{
         
         const updatedUser=await User.findByIdAndUpdate(req.params.id,{
             $set:{
-                userName:req.body.username||req.user.userName,
+                userName:req.body.userName||req.user.userName,
+                bio:req.body.bio||req.user.bio,
                 email:req.body.email||req.user.email,
                 password:req.body.password||req.user.password,
                 firstName:req.body.firstName||req.user.firstName,
@@ -70,8 +71,7 @@ export const getUser = async (req, res, next) => {
 
 export const getUsername = async (req, res, next) => {
     try {
-        const limit = parseInt(req.query.limit) || 9;
-        const startIndex = parseInt(req.query.startIndex) || 0;
+        
         const searchTerm = req.query.searchTerm || '';
         const users = await User.find({
             userName: { $regex: searchTerm, $options: 'i' },

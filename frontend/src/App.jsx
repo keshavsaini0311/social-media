@@ -6,6 +6,7 @@ import SignUp from './pages/SignUp'
 import Home from './pages/Home'
 import ChatPage from './pages/ChatPage'
 import Profile from './pages/Profile'
+import ProfilePage from './pages/ProfilePage'
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
       <Route path='/' element={<SignIn/>}/>
       <Route path='/sign-up' element={<SignUp/>}/>
       <Route element={<PrivateRoute/>}>
+      <Route path='/profile/:id' element={<ProfilePage/>}/>
       <Route path='/update-profile' element={<Profile/>}/>
       <Route path='/home' element={<Home/>}/>
       <Route path='/messages' element={<ChatPage/>}/>
