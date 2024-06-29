@@ -6,6 +6,7 @@ import {useRef ,useState,useEffect} from 'react'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { app } from '../firebase.js'
 import {  updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure ,signoutUserStart,signoutUserSuccess,signoutUserFailure} from '../redux/user/userSlice.js'
+import Header from '../components/Header.jsx'
 
 
 export default function Profile() {
@@ -139,6 +140,8 @@ export default function Profile() {
       }
     }    
   return (
+    <>
+    <Header/>
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className=' text-center text-3xl font-bold mb-4 text-slate-800 my-7'>Profile</h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
@@ -172,5 +175,7 @@ export default function Profile() {
       <p className='text-green-500 mt-5'>{updatesuccess?"Updated Successfully":""}</p>
      
     </div>
+
+    </>
   )
 }

@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'
+import Header from '../components/Header';
 const ProfilePage = () => {
     const params=useParams()
     const [user, setUser] = useState({});
@@ -33,6 +34,8 @@ const ProfilePage = () => {
 
 
   return (
+    <>
+    <Header/>
     <div className="bg-gray-100 min-h-screen flex flex-col items-center">
       <div className="bg-white shadow-md rounded-lg w-3/4 mt-10 p-6">
         <div className="flex items-center justify-between">
@@ -63,6 +66,7 @@ const ProfilePage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

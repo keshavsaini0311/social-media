@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import ChatPage from './pages/ChatPage'
 import Profile from './pages/Profile'
 import ProfilePage from './pages/ProfilePage'
+import Header from './components/Header'
 
 export default function App() {
   return (

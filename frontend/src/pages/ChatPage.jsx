@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react'
 import io from 'socket.io-client'
+import Header from '../components/Header';
 const socket=io.connect("http://localhost:5000")
 function ChatPage() {
 
@@ -50,6 +51,7 @@ function ChatPage() {
 
   return (
     <div>
+      <Header />
       
     </div>
   )
