@@ -1,6 +1,7 @@
 import bcryptjs from 'bcryptjs';
 import User from '../models/user.model.js';
 import { errorHandler } from '../utils/error.js';
+import { log } from 'console';
 export const test=(req,res)=>{
     res.json({
         message:"Hello",
@@ -56,7 +57,6 @@ export const deleteUser=async(req,res,next)=>{
 
 export const getUser = async (req, res, next) => {
     try {
-        
         const user = await User.findById(req.params.id);
         
         if (!user) return next(errorHandler(404, 'User not found!'));
