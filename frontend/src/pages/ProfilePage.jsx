@@ -9,6 +9,8 @@ const ProfilePage = () => {
     const [user, setUser] = useState({});
     const[loading,setLoading]=useState(true)
     const[error,setError]=useState(false)
+    const[follwmessage,setFollowMessage]=useState()
+
     useEffect(() => {
         const fetchUser = async () => {
           try {
@@ -28,10 +30,28 @@ const ProfilePage = () => {
           }
         };
         fetchUser();
-      }, [params.id ]);
+      }, [params.id,user ]);
 
       const followUser = async () => {
         try {
+          const message=`${currentUser.userName} ${user.followers.includes(currentUser._id)?'Unfollowed':'Followed'} ${user.userName}`
+          const res = await fetch(`/api/messages/`, {
+            method: 'POST',
+            body: JSON.stringify({ recipientId: user._id,message:message }),
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+          });
+          const data = await res.json();
+          if (data.success === false) {
+            console.log(data.message);
+            return;
+          }
+          console.log(data);
+        } catch (error) {
+          console.log(error.message);
+          }
+        try {
+
           const res = await fetch(`/api/user/follow/${user._id}`, {
             method: 'POST',
             credentials: 'same-origin',
@@ -45,6 +65,7 @@ const ProfilePage = () => {
         } catch (error) {
           console.log(error.message);
         }
+        
       }
 
 

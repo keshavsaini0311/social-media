@@ -165,7 +165,7 @@ export default function Profile() {
         <input onChange={handleChange} defaultValue={currentUser.contactNumber} id='contactNumber' type="text" placeholder='contact number' className='border p-3 rounded-lg' />
         <input onChange={handleChange} checked={currentUser.gender==='male'?true:false || formdata.gender==='male'?true:false} id='gender' type='radio' value='male' name='gender' className='border p-3 rounded-lg' /><label>Male</label>
         <input onChange={handleChange} checked={currentUser.gender==='female'?true:false || formdata.gender==='female'?true:false} id='gender' type='radio' value='female' name='gender' className='border p-3 rounded-lg' /><label>Female</label>
-        <input type="date" name="" defaultValue={currentUser.dateOfBirth} value={currentUser.dateOfBirth} className="border p-3 rounded-lg" id="dateOfBirth" />
+        <input type="date" name=""  className="border p-3 rounded-lg" id="dateOfBirth" />
         <button type='submit' className='border p-3 rounded-lg bg-slate-700 text-white uppercase hover:opacity-80 disabled:opacity-25'>Update</button>
       </form>
       <div className='mt-5 flex justify-between'>
