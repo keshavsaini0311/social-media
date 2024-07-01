@@ -61,7 +61,7 @@ const Header = () => {
   return (
     <header className="bg-green-600 text-white py-4 z-50 top-0 sticky">
       <div className="container mx-auto flex justify-between items-center px-4">
-        <h1 className="text-2xl font-bold">Social Media Site</h1>
+        <h1 className="text-2xl font-bold">Social Media</h1>
         <div className="relative text-black mx-auto" ref={searchRef}>
           <input
             type="text"
@@ -82,20 +82,36 @@ const Header = () => {
             </ul>
           )}
         </div>
-        <button
-          className="text-white md:hidden"
-          onClick={toggleNav}
-        >
-          {navVisible ? <GrClose /> : <GiHamburgerMenu />}
-        </button>
-        <nav ref={navRef} className={`absolute md:relative top-16 md:top-0 right-0 w-full md:w-auto flex flex-col md:flex-row md:flex space-x-0 md:space-x-4 items-center ${navVisible ? 'block' : 'hidden'} md:block bg-green-600 md:bg-transparent`}>
-          <Link to="/home" className="hover:text-gray-200 p-2 rounded-lg">Home</Link>
+        <div className=" flex-col items-center text-right">
+
+        <nav className="sm:flex hidden items-end gap-1 font-semibold">
+        <Link to="/home" className="hover:text-gray-200 p-2 rounded-lg">Home</Link>
           <Link to="/messages" className="hover:text-gray-200 p-2 rounded-lg">Messages</Link>
           <Link to="/update-profile" className="hover:text-gray-200 p-2 rounded-lg">Settings</Link>
           <Link to={`/profile/${user._id}`} className="hover:text-gray-200 p-2 rounded-lg">
             <img src={user.avatar} alt="" className="w-8 h-8 rounded-full" />
           </Link>
         </nav>
+
+        <button
+          className="text-white md:hidden"
+          onClick={toggleNav}
+        >
+          {navVisible ? <GrClose /> : <GiHamburgerMenu />}
+        </button>
+        {navVisible && (
+          
+          
+          <nav className="sm:hidden flex flex-col items-end gap-1 font-semibold">
+        <Link to="/home" className="hover:text-gray-200 p-2 rounded-lg">Home</Link>
+          <Link to="/messages" className="hover:text-gray-200 p-2 rounded-lg">Messages</Link>
+          <Link to="/update-profile" className="hover:text-gray-200 p-2 rounded-lg">Settings</Link>
+          <Link to={`/profile/${user._id}`} className="hover:text-gray-200 p-2 rounded-lg">
+            <img src={user.avatar} alt="" className="w-8 h-8 rounded-full" />
+          </Link>
+        </nav>
+        )}
+        </div>
       </div>
     </header>
   );
