@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function MessageInput({ recipientId }) {
+  const user = useSelector((state) => state.user.currentUser);
   const [formData, setFormData] = useState({
     message: '',
-    recipientId: recipientId,
+    recipientId: recipientId.participants[0]!==user._id?recipientId.participants[0]:recipientId.participants[1] ,
   });
   console.log(formData);
   const handleSubmit = async (e) => {

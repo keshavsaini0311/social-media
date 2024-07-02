@@ -10,14 +10,13 @@ export default function Messages({ selectedConversation }) {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [messages, setMessages] = useState([]);
-    console.log(selectedConversation);
   useEffect(() => {
     const getMessages = async () => {
       if (!selectedConversation) return;
 
       try {
         setLoadingMessages(true);
-        const id = selectedConversation.participants[0];
+        const id = selectedConversation.participants[1];
         const res = await fetch(`/api/messages/${id}`);
         const data = await res.json();
         if (data.success===false) {

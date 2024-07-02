@@ -74,23 +74,21 @@ async function getMessages(req, res) {
 
 		res.status(200).json(messages);
 	} catch (error) {
-		next(err);
+		next(error);
 	}
 }
 
 async function getConversations(req, res) {
 	const userId = req.user.id;
+	console.log(userId);
 	try {
 		const conversations = await Conversation.find({ participants: userId });
-		
 		// remove the current user from the participants array
-		conversations.forEach((conversation) => {
-			conversation.participants = conversation.participants.filter(participant => participant._id.toString() !== userId.toString());
-		});
+		
 		
 		res.status(200).json(conversations);
 	} catch (error) {
-		next(err);
+		res.status(500).json({ error: error.message,success:false });
 	}
 }
 

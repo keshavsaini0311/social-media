@@ -15,7 +15,7 @@ function ChatPage() {
   const [loadingConversations, setLoadingConversations] = useState(false);
   const [conversations, setConversations] = useState([]);  
   const [selectedConversation, setSelectedConversation] = useState(null);
-  console.log(conversations);
+  console.log(conversations,selectedConversation );
   useEffect(() => {
     const getConversations = async () => {
       try {
@@ -24,6 +24,7 @@ function ChatPage() {
         const data = await res.json();
         if (data.success=== false) {
           setLoadingConversations(false);
+          console.log(data);
           console.log("Error", data, "error");
           return;
         }
@@ -71,7 +72,7 @@ function ChatPage() {
               
               <div key={conversation._id} onClick={() => setSelectedConversation(conversation)}>
                 <Conversation
-                  conversation={conversation.participants[0]}
+                  conversation={conversation.participants[1]}
                   lastMessage={conversation.lastMessage.text}
                 />
               </div>
@@ -86,7 +87,7 @@ function ChatPage() {
                 {console.log(selectedConversation)}
                 <Messages selectedConversation={selectedConversation} />
               </div>
-              <MessageInput recipientId={selectedConversation.participants[0]} />
+              <MessageInput recipientId={selectedConversation} />
             </>
           ) : (
             <div className="d-flex justify-content-center">

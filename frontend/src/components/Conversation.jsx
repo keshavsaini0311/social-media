@@ -6,7 +6,6 @@ export default function Conversation({ conversation, lastMessage }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  console.log(lastMessage);
   useEffect(() => {
     const fetchUser = async () => {
       try {
