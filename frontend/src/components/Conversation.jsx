@@ -6,6 +6,7 @@ export default function Conversation({ conversation, lastMessage }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  console.log(lastMessage);
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -15,7 +16,7 @@ export default function Conversation({ conversation, lastMessage }) {
         if (data.success===false) {
           console.log(data.message);
           setLoading(false);
-          return;
+          return; 
         }
         setUser(data);
         setLoading(false);
@@ -39,9 +40,12 @@ export default function Conversation({ conversation, lastMessage }) {
             <h1>{user.firstName} {user.lastName}</h1>
           </div>
           <p>@{user.userName}</p>
-          <p className='text-sm text-gray-600'>
+          {lastMessage && (
+            
+            <p className='text-sm text-gray-600'>
             {lastMessage.substring(0, 20)}{lastMessage.length > 20 && '...'}
           </p>
+          )}
         </div>
       )}
     </div>

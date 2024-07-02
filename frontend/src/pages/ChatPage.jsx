@@ -15,7 +15,7 @@ function ChatPage() {
   const [loadingConversations, setLoadingConversations] = useState(false);
   const [conversations, setConversations] = useState([]);  
   const [selectedConversation, setSelectedConversation] = useState(null);
-  console.log(selectedConversation);
+  console.log(conversations);
   useEffect(() => {
     const getConversations = async () => {
       try {
