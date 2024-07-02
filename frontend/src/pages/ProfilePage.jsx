@@ -9,7 +9,6 @@ const ProfilePage = () => {
     const [user, setUser] = useState({});
     const[loading,setLoading]=useState(true)
     const[error,setError]=useState(false)
-    const[follwmessage,setFollowMessage]=useState()
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -65,7 +64,6 @@ const ProfilePage = () => {
         } catch (error) {
           console.log(error.message);
         }
-        
       }
 
 
