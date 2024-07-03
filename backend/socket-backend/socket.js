@@ -3,6 +3,7 @@ import http from "http";
 import express from "express";
 import Message from "../models/messageModel.js";
 import Conversation from "../models/conversationModel.js";
+import { lookupService } from "dns/promises";
 
 const app = express();
 const server = http.createServer(app);
@@ -23,7 +24,7 @@ const userSocketMap = {}; // userId: socketId
 io.on("connection", (socket) => {
 	console.log("user connected", socket.id);
 	const userId = socket.handshake.query.userId;
-
+	console.log(userId);
 	if (userId != "undefined") userSocketMap[userId] = socket.id;
 	io.emit("getOnlineUsers", Object.keys(userSocketMap));
 

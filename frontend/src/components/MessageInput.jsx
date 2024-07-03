@@ -1,14 +1,29 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import io from 'socket.io-client';
+
+const socket = io.connect("http://localhost:5000");
 
 export default function MessageInput({ recipientId }) {
-  console.log(recipientId.participants[0]);
+  
   const [formData, setFormData] = useState({
     message: '',
     recipientId: recipientId.participants[0] ,
   });
+  console.log(formData);
+  useEffect(() => {
+    const getuser = async () => {
+      try {
+        const res = await fetch(`/api/user/${recipientId.participants[0]}`);
+        const data = await res.json();
+        setFormData({ ...formData, recipientId: data._id });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getuser();
+  }, [recipientId]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -25,6 +40,7 @@ export default function MessageInput({ recipientId }) {
         return;
       }
       setFormData({ ...formData, message: '' });
+      
     } catch (error) {
       console.log(error);
     }

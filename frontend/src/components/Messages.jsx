@@ -10,6 +10,15 @@ export default function Messages({ selectedConversation }) {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [messages, setMessages] = useState([]);
+
+  
+  socket.on("newMessage", (message) => {
+    if (selectedConversation._id === message.conversationId) {
+      setMessages((prev) => [...prev, message]);
+      console.log("New Message", message);
+    }
+  });
+
   useEffect(() => {
     const getMessages = async () => {
       if (!selectedConversation) return;
@@ -34,6 +43,7 @@ export default function Messages({ selectedConversation }) {
 
     getMessages();
   }, [selectedConversation, setMessages]);
+
 
   return (
     <div>
