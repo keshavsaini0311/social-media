@@ -72,7 +72,7 @@ function ChatPage() {
               
               <div key={conversation._id} onClick={() => setSelectedConversation(conversation)}>
                 <Conversation
-                  conversation={conversation.participants[1]}
+                  conversation={conversation.participants[0]}
                   lastMessage={conversation.lastMessage.text}
                 />
               </div>

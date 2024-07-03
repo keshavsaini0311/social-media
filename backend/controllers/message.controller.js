@@ -83,7 +83,17 @@ async function getConversations(req, res) {
 	console.log(userId);
 	try {
 		const conversations = await Conversation.find({ participants: userId });
+
+		if (!conversations) {
+			return res.status(404).json({ error: "No conversations found",success:false });
+		}
 		// remove the current user from the participants array
+		conversations.forEach((conversation) => {
+			var index=conversation.participants.indexOf(userId);
+			if (index !== -1){
+			conversation.participants.splice(index, 1);
+			}
+		});
 		
 		
 		res.status(200).json(conversations);

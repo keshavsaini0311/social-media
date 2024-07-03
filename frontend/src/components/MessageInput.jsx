@@ -4,12 +4,11 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function MessageInput({ recipientId }) {
-  const user = useSelector((state) => state.user.currentUser);
+  console.log(recipientId.participants[0]);
   const [formData, setFormData] = useState({
     message: '',
-    recipientId: recipientId.participants[0]!==user._id?recipientId.participants[0]:recipientId.participants[1] ,
+    recipientId: recipientId.participants[0] ,
   });
-  console.log(formData);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -26,7 +25,6 @@ export default function MessageInput({ recipientId }) {
         return;
       }
       setFormData({ ...formData, message: '' });
-      console.log(data);
     } catch (error) {
       console.log(error);
     }

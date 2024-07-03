@@ -16,7 +16,7 @@ export default function Messages({ selectedConversation }) {
 
       try {
         setLoadingMessages(true);
-        const id = selectedConversation.participants[1];
+        const id = selectedConversation.participants[0];
         const res = await fetch(`/api/messages/${id}`);
         const data = await res.json();
         if (data.success===false) {
