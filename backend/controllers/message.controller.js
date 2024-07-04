@@ -85,7 +85,7 @@ async function getConversations(req, res) {
 	const userId = req.user.id;
 	console.log(userId);
 	try {
-		const conversations = await Conversation.find({ participants: userId });
+		const conversations = await Conversation.find({ participants: userId }).sort({updatedAt:-1});
 
 		if (!conversations) {
 			return res.status(404).json({ error: "No conversations found",success:false });

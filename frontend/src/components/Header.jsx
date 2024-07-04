@@ -11,7 +11,6 @@ const Header = () => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [profiles, setProfiles] = useState([]);
   const [navVisible, setNavVisible] = useState(false); // State for navigation visibility on smaller screens
-
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value.trim());
     setDropdownVisible(e.target.value.trim() !== '');
@@ -70,9 +69,9 @@ const Header = () => {
             placeholder="Search profiles"
             className="px-2 py-1 rounded"
           />
-          {dropdownVisible && (
+          {profiles.length > 0 && dropdownVisible && (
             <ul className="absolute left-0 mt-2 w-full bg-white text-black shadow-lg rounded-md z-10 max-h-48 overflow-y-auto">
-              {profiles.slice(0, 6).map((profile) => (
+              {profiles.map((profile) => (
                 <li key={profile._id} className="px-4 py-2 hover:bg-gray-200">
                   <Link to={`/profile/${profile._id}`} className="block">
                     {profile.firstName + ' ' + profile.lastName} <span className="text-gray-500">{profile.userName}</span>

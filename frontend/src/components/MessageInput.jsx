@@ -11,7 +11,6 @@ export default function MessageInput({ recipientId }) {
     message: '',
     recipientId: recipientId.participants[0] ,
   });
-  console.log(formData);
   useEffect(() => {
     const getuser = async () => {
       try {

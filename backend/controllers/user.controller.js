@@ -71,7 +71,6 @@ export const getUser = async (req, res, next) => {
 
 export const getUsername = async (req, res, next) => {
     try {
-        
         const searchTerm = req.query.searchTerm || '';
         const users = await User.find({
             userName: { $regex: searchTerm, $options: 'i' },

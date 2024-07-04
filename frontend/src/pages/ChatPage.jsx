@@ -58,7 +58,7 @@ function ChatPage() {
   return (
     <div className="container">
       <Header />
-      <div className="mt-5 flex">
+      <div className=" mt-10 mb-10 flex">
         <div className="">
           {loadingConversations||!conversations ? (
             <div className="d-flex justify-content-center">
@@ -67,23 +67,23 @@ function ChatPage() {
               </div>
             </div>
           ) : (
-            
-            conversations.map((conversation) => (
-              
-              <div key={conversation._id} onClick={() => setSelectedConversation(conversation)}>
+            <div className=" max-h-96 overflow-scroll">
+
+            {conversations.map((conversation) => (             
+              <div className=" overflow-y-auto" key={conversation._id} onClick={() => setSelectedConversation(conversation)}>
                 <Conversation
                   conversation={conversation.participants[0]}
                   lastMessage={conversation.lastMessage.text}
-                />
+                  />
               </div>
-              
-            ))
+            ))}
+            </div>
           )}
         </div>
-        <div className="sm:w-5/6 w-1/2 text-white">
+        <div className="sm:w-5/6 w-1/2  text-white">
           {selectedConversation ? (
             <>
-              <div  className="bg-gray-400">
+              <div  className="bg-gray-400 h-96 overflow-y-auto">
                 {console.log(selectedConversation)}
                 <Messages selectedConversation={selectedConversation} />
               </div>
