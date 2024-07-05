@@ -1,5 +1,6 @@
 import Conversation from "../models/conversationModel.js";
 import Message from "../models/messageModel.js";
+import User from "../models/user.model.js";
 import { getRecipientSocketId, io } from "../socket-backend/socket.js";
 import { v2 as cloudinary } from "cloudinary";
 import { errorHandler } from '../utils/error.js';
@@ -71,7 +72,7 @@ async function getMessages(req, res) {
 
 		res.status(200).json(messages);
 	} catch (error) {
-		next(error);
+		res.status(500).json({ error: error.message,success:false });
 	}
 }
 
@@ -92,11 +93,46 @@ async function getConversations(req, res) {
 			}
 		});
 		
-		
 		res.status(200).json(conversations);
 	} catch (error) {
 		res.status(500).json({ error: error.message,success:false });
 	}
 }
 
-export { sendMessage, getMessages, getConversations };
+async function getconversationfromusername(req, res) {
+	const userId = req.user.id;
+	console.log(userId);
+	const searchTerm = req.query.searchTerm || '';
+	console.log(searchTerm);
+	try {
+        const users = await User.find({
+            userName: { $regex: searchTerm, $options: 'i' },
+        });
+		if (!users) return next(errorHandler(404, 'User not found!'));
+		const useridset=new Set();
+		users.forEach((user) => {
+			useridset.add(user._id);
+		});
+		try {
+			
+			const conversations = await Conversation.find({ participants: userId }).sort({updatedAt:-1});
+			const filteredConversations = conversations.filter((conversation) => {
+				return useridset.has(conversation.participants[0]) || useridset.has(conversation.participants[1]);
+			})
+
+			if (!filteredConversations) {
+				return res.status(404).json({ error: "No conversations found",success:false });
+			}
+
+			res.status(200).json(filteredConversations);
+		} catch (error) {
+			res.status(500).json({ error: error.message,success:false });
+		}
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ error: error.message,success:false });
+	}
+		
+}
+
+export { sendMessage, getMessages, getConversations, getconversationfromusername };

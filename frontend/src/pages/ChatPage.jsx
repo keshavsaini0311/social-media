@@ -15,29 +15,9 @@ function ChatPage() {
   const [loadingConversations, setLoadingConversations] = useState(false);
   const [conversations, setConversations] = useState([]);  
   const [selectedConversation, setSelectedConversation] = useState(null);
-  console.log(conversations,selectedConversation );
-  useEffect(() => {
-    const getConversations = async () => {
-      try {
-        setLoadingConversations(true);
-        const res = await fetch("/api/messages/conversations");
-        const data = await res.json();
-        if (data.success=== false) {
-          setLoadingConversations(false);
-          console.log(data);
-          console.log("Error", data, "error");
-          return;
-        }
-        setLoadingConversations(false);
-        setConversations(data);
-      } catch (error) {
-        console.log("Error", error.message, "error");
-        setLoadingConversations(false);
-      }
-    };
+  const [searchTerm, setSearchTerm] = useState("");
 
-    getConversations();
-  }, [ setConversations]);
+  console.log(conversations );
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
@@ -55,6 +35,55 @@ function ChatPage() {
     socket.emit("send_message", { message, room });
   };
 
+  const handlechange =async (e) => {
+    setSearchTerm(e.target.value);
+    
+  }
+
+  useEffect(() => {
+    const getConversations = async () => {
+      try {
+        const res = await fetch("/api/messages/conversations");
+        const data = await res.json();
+        if (data.success=== false) {
+          setLoadingConversations(false);
+          console.log(data);
+          console.log("Error", data, "error");
+          return;
+        }
+        setLoadingConversations(false);
+        setConversations(data);
+      } catch (error) {
+        console.log("Error", error.message, "error");
+        setLoadingConversations(false);
+      }
+    };
+    getConversations();
+    
+    const fetchUsers = async () => {
+      if (!searchTerm || searchTerm.length < 1) {
+        return;
+      }
+      if (searchTerm) {
+        // change conversation to those user who matches the search term
+        const response = await fetch(`/api/user/search?searchTerm=${searchTerm}`);
+        const data = await response.json();
+        const useridset=new Set();
+		    data.forEach((user) => {
+			  useridset.add(user._id);
+        }); 
+        const filteredConversations = conversations.filter((conversation) => {
+          return useridset.has(conversation.participants[0]) || useridset.has(conversation.participants[1]);
+        })
+        setConversations(filteredConversations);
+      }
+    };
+    if(conversations.length>0|| searchTerm.length>0) {
+      setTimeout(() => fetchUsers()
+      , 20);
+    }
+  }, [ searchTerm]);
+
   return (
     <div className="">
       <Header />
@@ -67,9 +96,11 @@ function ChatPage() {
               </div>
             </div>
           ) : (
-            <div  className="sm:flex-col ml-2 sm:h bg-slate-300 rounded-xl flex overflow-scroll no-scrollbar ">
-
-            {conversations.map((conversation) => (             
+            <div  className="sm:flex-col gap-2 p-2 ml-2 sm:h bg-slate-300 rounded-xl flex overflow-scroll no-scrollbar ">
+              <div className="m-auto">
+                <input value={searchTerm} type="text" className='p-2  rounded-xl' placeholder='Search' onChange={handlechange} />
+              </div>
+            { conversations.map((conversation) => (             
               <div className={`rounded-lg p-3 hover:bg-indigo-200 ${selectedConversation&& conversation._id === selectedConversation._id && "bg-indigo-300"}`} key={conversation._id} onClick={() => setSelectedConversation(conversation)}>
                 <Conversation
                   conversation={conversation.participants[0]}
@@ -84,7 +115,6 @@ function ChatPage() {
           {selectedConversation ? (
             <>
               <div style={{ height: "70vh" }} className="sm:h p-3 gap-2 rounded-2xl mx-auto w-5/6 sm:w-11/12 bg-gradient-to-r from-green-200 to-blue-300 no-scrollbar overflow-scroll">
-                {console.log(selectedConversation)}
                 <Messages selectedConversation={selectedConversation} />
                 <div className="p-2 sticky bottom-0">
                 <MessageInput recipientId={selectedConversation} />
