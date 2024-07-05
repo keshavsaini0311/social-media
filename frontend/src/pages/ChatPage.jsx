@@ -56,21 +56,21 @@ function ChatPage() {
   };
 
   return (
-    <div className="container">
+    <div className="">
       <Header />
-      <div className=" mt-10 mb-10 flex">
+      <div className="flex flex-col w-full sm:flex-row mt-5 gap-3">
         <div className="">
           {loadingConversations||!conversations ? (
-            <div className="d-flex justify-content-center">
+            <div className="flex sm:flex-col justify-content-center">
               <div className="spinner-border" role="status">
                 <span className="visually-hidden">Loading...</span>
               </div>
             </div>
           ) : (
-            <div className=" max-h-96 overflow-scroll">
+            <div  className="sm:flex-col ml-2 sm:h bg-slate-300 rounded-xl flex overflow-scroll no-scrollbar ">
 
             {conversations.map((conversation) => (             
-              <div className=" overflow-y-auto" key={conversation._id} onClick={() => setSelectedConversation(conversation)}>
+              <div className={`rounded-lg p-3 hover:bg-indigo-200 ${selectedConversation&& conversation._id === selectedConversation._id && "bg-indigo-300"}`} key={conversation._id} onClick={() => setSelectedConversation(conversation)}>
                 <Conversation
                   conversation={conversation.participants[0]}
                   lastMessage={conversation.lastMessage.text}
@@ -80,14 +80,16 @@ function ChatPage() {
             </div>
           )}
         </div>
-        <div className="sm:w-5/6 w-1/2  text-white">
+        <div className="w-full text-white">
           {selectedConversation ? (
             <>
-              <div  className="bg-gray-400 h-96 overflow-y-auto">
+              <div style={{ height: "70vh" }} className="sm:h p-3 gap-2 rounded-2xl mx-auto w-5/6 sm:w-11/12 bg-gradient-to-r from-green-200 to-blue-300 no-scrollbar overflow-scroll">
                 {console.log(selectedConversation)}
                 <Messages selectedConversation={selectedConversation} />
+                <div className="p-2 sticky bottom-0">
+                <MessageInput recipientId={selectedConversation} />
+                </div>
               </div>
-              <MessageInput recipientId={selectedConversation} />
             </>
           ) : (
             <div className="d-flex justify-content-center">

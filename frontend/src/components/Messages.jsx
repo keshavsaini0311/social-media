@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 
@@ -44,9 +44,13 @@ export default function Messages({ selectedConversation }) {
     getMessages();
   }, [selectedConversation, setMessages]);
 
+  const messagesEndRef = useRef(null);
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   return (
-    <div>
+    <div className=" ">
       {loadingMessages ? (
         <div className="d-flex justify-content-center">
           <div className="spinner-border" role="status">
@@ -54,13 +58,18 @@ export default function Messages({ selectedConversation }) {
           </div>
         </div>
       ) : (
-        messages.map((message) => (
-          <div key={message._id} className="m-2">
-            <div className={message.sender === currentUser._id ? "text-right text-wrap" : "text-left items-start text-wrap"}>
-              <p>{message.text}</p>
-            </div>
-          </div>
+        <div className="flex flex-col">
+        {
+          messages && messages.map((message) => (
+            <div key={message._id} className={`flex ${message.sender === currentUser._id ? "justify-end " : "justify-start  "}`}>
+            <div className={`inline-block p-2 m-2 rounded-lg max-w-sm bg-green-400 break-words  `}>
+            {message.text}</div>
+              </div>
+          
         ))
+      }
+      <div ref={messagesEndRef} />
+      </div>
       )}
     </div>
   );

@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import {FiSend} from 'react-icons/fi'
 
 const socket = io.connect("http://localhost:5000");
 
@@ -47,16 +48,16 @@ export default function MessageInput({ recipientId }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className='text-black w-full flex'>
+      <div className='text-black w-full  flex'>
         <input
           type="text"
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-          className='w-full outline-none bg-transparent py-1.5'
+          className='w-full outline-none bg-gray-50 p-1.5 rounded-lg'
           placeholder="Type a message..."
         />
-        <div className="text-right w-full">
-          <button type="submit" className='text-right'>Send</button>
+        <div className="text-right m-1 p-2 rounded-full bg-slate-200">
+          <button type="submit" className='text-right text-green-600'> <FiSend /></button>
         </div>
       </div>
     </form>

@@ -60,7 +60,11 @@ const Header = () => {
   return (
     <header className="bg-green-600 text-white py-4 z-50 top-0 sticky">
       <div className="container mx-auto flex justify-between items-center px-4">
-        <h1 className="text-2xl font-bold">Social Media</h1>
+        <h1 className="text-2xl font-bold hover:text-gray-200">
+          <Link to="/home">
+          Social Media
+          </Link>
+          </h1>
         <div className="relative text-black mx-auto" ref={searchRef}>
           <input
             type="text"
