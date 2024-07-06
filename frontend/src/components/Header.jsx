@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { GrClose } from "react-icons/gr";
 import { GiHamburgerMenu } from "react-icons/gi";
-
 const Header = () => {
   const user = useSelector((state) => state.user.currentUser);
   const [searchTerm, setSearchTerm] = useState('');
@@ -58,7 +57,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-green-600 text-white py-4 z-50 top-0 sticky">
+    <header className="bg-gray-800 text-white py-4 z-50 top-0 sticky">
       <div className="container mx-auto flex justify-between items-center px-4">
         <h1 className="text-2xl font-bold hover:text-gray-200">
           <Link to="/home">
@@ -71,10 +70,10 @@ const Header = () => {
             value={searchTerm}
             onChange={handleSearchChange}
             placeholder="Search profiles"
-            className="px-2 py-1 rounded"
+            className="px-2 py-1 rounded bg-gray-900 text-white focus:outline-none"
           />
           {profiles.length > 0 && dropdownVisible && (
-            <ul className="absolute left-0 mt-2 w-full no-scrollbar bg-white text-black shadow-lg rounded-md z-10 max-h-48 overflow-y-auto">
+            <ul className="absolute left-0 mt-2 w-full no-scrollbar bg-gray-900 text-white shadow-lg rounded-md z-10 max-h-48 overflow-y-auto">
               {profiles.map((profile) => (
                 <li onClick={() => setDropdownVisible(false)} key={profile._id} className="px-4 py-2 hover:bg-gray-200">
                   <Link to={`/profile/${profile._id}`} className="block">

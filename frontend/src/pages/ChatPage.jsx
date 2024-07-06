@@ -69,8 +69,8 @@ function ChatPage() {
         const response = await fetch(`/api/user/search?searchTerm=${searchTerm}`);
         const data = await response.json();
         const useridset=new Set();
-		    data.forEach((user) => {
-			  useridset.add(user._id);
+        data.forEach((user) => {
+         useridset.add(user._id);
         }); 
         const filteredConversations = conversations.filter((conversation) => {
           return useridset.has(conversation.participants[0]) || useridset.has(conversation.participants[1]);
@@ -80,7 +80,7 @@ function ChatPage() {
     };
     if(conversations.length>0|| searchTerm.length>0) {
       setTimeout(() => fetchUsers()
-      , 20);
+      , 40);
     }
   }, [ searchTerm]);
 
@@ -96,12 +96,12 @@ function ChatPage() {
               </div>
             </div>
           ) : (
-            <div  className="sm:flex-col gap-2 p-2 ml-2 sm:h bg-slate-300 rounded-xl flex overflow-scroll no-scrollbar ">
-              <div className="m-auto">
-                <input value={searchTerm} type="text" className='p-2  rounded-xl' placeholder='Search' onChange={handlechange} />
+            <div  className="sm:flex-col gap-2 ml-2 sm:h rounded-xl concversation flex overflow-scroll no-scrollbar ">
+              <div   className="text-center w-full sticky p-3 top-0 z-10 concversation">
+                <input value={searchTerm} type="text" className='p-2 mx-auto rounded-xl' placeholder='Search' onChange={handlechange} />
               </div>
             { conversations.map((conversation) => (             
-              <div className={`rounded-lg p-3 hover:bg-indigo-200 ${selectedConversation&& conversation._id === selectedConversation._id && "bg-indigo-300"}`} key={conversation._id} onClick={() => setSelectedConversation(conversation)}>
+              <div className={`rounded-lg p-3 hover:scale-105 transition-all ${selectedConversation&& conversation._id === selectedConversation._id && "bg-green-600"}`} key={conversation._id} onClick={() => setSelectedConversation(conversation)}>
                 <Conversation
                   conversation={conversation.participants[0]}
                   lastMessage={conversation.lastMessage.text}

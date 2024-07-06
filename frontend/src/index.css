@@ -17,3 +17,14 @@
 
   
 }
+body{
+    background-color: rgb(41, 41, 41);
+    color: black;
+    font-family: 'Poppins', sans-serif;
+}
+
+.concversation{
+    background-color: rgb(35, 74, 57);
+    color: black;
+    font-family: 'Poppins', sans-serif;
+}
