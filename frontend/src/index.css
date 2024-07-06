@@ -24,7 +24,10 @@ body{
 }
 
 .concversation{
-    background-color: rgb(35, 74, 57);
+    background-color: rgb(33, 42, 72);
     color: black;
     font-family: 'Poppins', sans-serif;
+}
+.h{
+    height: 80vh;
 }

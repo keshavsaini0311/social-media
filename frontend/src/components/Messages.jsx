@@ -50,7 +50,7 @@ export default function Messages({ selectedConversation }) {
   }, [messages]);
 
   return (
-    <div className=" ">
+    <div className="text-black ">
       {loadingMessages ? (
         <div className="d-flex justify-content-center">
           <div className="spinner-border" role="status">
@@ -62,7 +62,7 @@ export default function Messages({ selectedConversation }) {
         {
           messages && messages.map((message) => (
             <div key={message._id} className={`flex ${message.sender === currentUser._id ? "justify-end " : "justify-start  "}`}>
-            <div className={`inline-block p-2 m-2 rounded-lg max-w-sm bg-green-400 break-words  `}>
+            <div className={`inline-block p-2 m-2 rounded-lg max-w-sm bg-blue-400 break-words  `}>
             {message.text}</div>
               </div>
           

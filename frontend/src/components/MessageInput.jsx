@@ -50,16 +50,16 @@ export default function MessageInput({ recipientId }) {
     <form  onSubmit={handleSubmit}>
       <div className="">
 
-      <div className='text-black  w-3 flex'>
+      <div className='text-black   w-full flex'>
         <input
           type="text"
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-          className=' outline-none bg-gray-50 p-1.5 rounded-lg'
+          className=' outline-none bg-gray-50 p-1.5 w-full rounded-lg'
           placeholder="Type a message..."
           />
         <div className="text-right m-1 p-2 rounded-full bg-slate-200">
-          <button type="submit" className='text-right text-green-600'> <FiSend /></button>
+          <button type="submit" className='text-right text-blue-600'> <FiSend /></button>
           </div>
         </div>
       </div>

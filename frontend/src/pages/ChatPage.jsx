@@ -96,12 +96,12 @@ function ChatPage() {
               </div>
             </div>
           ) : (
-            <div  className="sm:flex-col gap-2 ml-2 sm:h rounded-xl concversation flex overflow-scroll no-scrollbar ">
-              <div   className="text-center w-full sticky p-3 top-0 z-10 concversation">
+            <div  className="sm:flex-col  gap-2 ml-2 sm:h rounded-xl concversation flex overflow-scroll no-scrollbar ">
+              <div   className="text-center w-full m-auto sm:my-3 sticky p-3 top-0 z-10 concversation">
                 <input value={searchTerm} type="text" className='p-2 mx-auto rounded-xl' placeholder='Search' onChange={handlechange} />
               </div>
             { conversations.map((conversation) => (             
-              <div className={`rounded-lg p-3 hover:scale-105 transition-all ${selectedConversation&& conversation._id === selectedConversation._id && "bg-green-600"}`} key={conversation._id} onClick={() => setSelectedConversation(conversation)}>
+              <div className={`rounded-lg p-3 hover:scale-105 transition-all ${selectedConversation&& conversation._id === selectedConversation._id && "bg-blue-950"}`} key={conversation._id} onClick={() => setSelectedConversation(conversation)}>
                 <Conversation
                   conversation={conversation.participants[0]}
                   lastMessage={conversation.lastMessage.text}
@@ -111,12 +111,12 @@ function ChatPage() {
             </div>
           )}
         </div>
-        <div className="w-full text-white">
+        <div className="w-full mx-2 text-white bg-gradient-to-r from-zinc-950 to-neutral-900 rounded-2xl">
           {selectedConversation ? (
             <>
-              <div style={{ height: "70vh" }} className="sm:h p-3 gap-2 rounded-2xl mx-auto w-5/6 sm:w-11/12 bg-gradient-to-r from-green-200 to-blue-300 no-scrollbar overflow-scroll">
+              <div  className="h  gap-2 rounded-2xl mx-auto w-5/6 sm:w-11/12  no-scrollbar overflow-scroll">
                 <Messages selectedConversation={selectedConversation} />
-                <div className="p-2 sticky bottom-0">
+                <div className="p-4 sticky bottom-0 z-10  ">
                 <MessageInput recipientId={selectedConversation} />
                 </div>
               </div>

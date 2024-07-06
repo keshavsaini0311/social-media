@@ -33,7 +33,7 @@ export default function Conversation({ conversation, lastMessage }) {
       {loading && <div>Loading...</div>}
       {error && <div>Error: {error}</div>}
       {user && (
-        <div className="p-4 sm:ml-5  h-28 w-48 min-w-max border border-green-800 sm:rounded-l-lg rounded-lg bg-green-300 hover:bg-green-200 hover:cursor-pointer">
+        <div className="p-4 mx-2  h-28 w-48 min-w-max border border-blue-800 sm:rounded-l-lg rounded-lg bg-blue-300 hover:bg-blue-400 hover:cursor-pointer">
           <div className="flex gap-2">
             <img src={user.avatar} alt="profile pic" className='rounded-full w-6 h-6' />
             <h1>{user.firstName} {user.lastName}</h1>
