@@ -17,11 +17,35 @@ function ChatPage() {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  socket.on("receive_message", (data) => {
+    // add new message to state
+    setSearchTerm(null);
+    const getConversations = async () => {
+      try {
+        const res = await fetch("/api/messages/conversations");
+        const data = await res.json();
+        if (data.success=== false) {
+          setLoadingConversations(false);
+          console.log(data);
+          console.log("Error", data, "error");
+          return;
+        }
+        setLoadingConversations(false);
+        setConversations(data);
+      } catch (error) {
+        console.log("Error", error.message, "error");
+        setLoadingConversations(false);
+      }
+    };
+    getConversations();
+  });
+
   console.log(conversations );
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
       setMessageReceived(data.message);
+
     });
   }, []);
 
@@ -82,7 +106,7 @@ function ChatPage() {
       setTimeout(() => fetchUsers()
       , 40);
     }
-  }, [ searchTerm]);
+  }, [socket, searchTerm,setSearchTerm]);
 
   return (
     <div className="">
@@ -111,7 +135,7 @@ function ChatPage() {
             </div>
           )}
         </div>
-        <div className="w-full mx-2 text-white bg-gradient-to-r from-zinc-950 to-neutral-900 rounded-2xl">
+        <div className="w-full mx-2 text-white bg-gradient-to-r from-zinc-900 to-neutral-950 rounded-2xl">
           {selectedConversation ? (
             <>
               <div  className="h  gap-2 rounded-2xl mx-auto w-5/6 sm:w-11/12  no-scrollbar overflow-scroll">

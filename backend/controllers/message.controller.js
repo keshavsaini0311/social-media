@@ -1,7 +1,6 @@
 import Conversation from "../models/conversationModel.js";
 import Message from "../models/messageModel.js";
 import User from "../models/user.model.js";
-import { getRecipientSocketId, io } from "../socket-backend/socket.js";
 import { v2 as cloudinary } from "cloudinary";
 import { errorHandler } from '../utils/error.js';
 
@@ -78,7 +77,6 @@ async function getMessages(req, res) {
 
 async function getConversations(req, res) {
 	const userId = req.user.id;
-	console.log(userId);
 	try {
 		const conversations = await Conversation.find({ participants: userId }).sort({updatedAt:-1});
 

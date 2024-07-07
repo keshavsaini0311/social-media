@@ -3,11 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import {FiSend} from 'react-icons/fi'
+import { useSelector } from 'react-redux';
+
 
 const socket = io.connect("http://localhost:5000");
 
 export default function MessageInput({ recipientId }) {
-  
+
+  const { currentUser } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     message: '',
     recipientId: recipientId.participants[0] ,
@@ -24,7 +27,21 @@ export default function MessageInput({ recipientId }) {
     }
     getuser();
   }, [recipientId]);
+
+  useEffect(()=>{
+    console.log(recipientId._id);
+        socket.emit("join_room", recipientId._id);
+  },[recipientId]);
+  
   const handleSubmit = async (e) => {
+    
+      const id=recipientId._id;
+     const message = formData.message;
+     const sender=currentUser._id
+      socket.emit("send_message", { message, id, sender });
+    
+  
+
     e.preventDefault();
     try {
       const res = await fetch('/api/messages', {

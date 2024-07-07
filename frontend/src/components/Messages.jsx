@@ -10,12 +10,13 @@ export default function Messages({ selectedConversation }) {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [messages, setMessages] = useState([]);
-
-  
-  socket.on("newMessage", (message) => {
-    if (selectedConversation._id === message.conversationId) {
-      setMessages((prev) => [...prev, message]);
-      console.log("New Message", message);
+  const [messageReceived, setMessageReceived] = useState("");
+  socket.on("receive_message", (data) => {
+    console.log("Receive Message", data);
+    // add new message to state
+    if (selectedConversation._id === data.id) {
+      const message = [...messages, {text:data.message, sender:data.sender}];
+      setMessages(message);
     }
   });
 
@@ -42,8 +43,7 @@ export default function Messages({ selectedConversation }) {
     };
 
     getMessages();
-  }, [selectedConversation, setMessages]);
-
+  }, [ selectedConversation, setMessages]);
   const messagesEndRef = useRef(null);
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -51,13 +51,6 @@ export default function Messages({ selectedConversation }) {
 
   return (
     <div className="text-black ">
-      {loadingMessages ? (
-        <div className="d-flex justify-content-center">
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      ) : (
         <div className="flex flex-col">
         {
           messages && messages.map((message) => (
@@ -70,7 +63,6 @@ export default function Messages({ selectedConversation }) {
       }
       <div ref={messagesEndRef} />
       </div>
-      )}
     </div>
   );
 }
