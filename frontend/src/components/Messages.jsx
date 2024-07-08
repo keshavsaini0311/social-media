@@ -7,11 +7,14 @@ import { useSelector } from 'react-redux';
 const socket = io.connect("http://localhost:5000");
 
 export default function Messages({ selectedConversation }) {
+  console.log("selected:"+selectedConversation);
+
   const [loadingMessages, setLoadingMessages] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [messages, setMessages] = useState([]);
 
-  
+  const [messageReceived, setMessageReceived] = useState("");
+  console.log(messageReceived);
   socket.on("newMessage", (message) => {
     if (selectedConversation._id === message.conversationId) {
       setMessages((prev) => [...prev, message]);
@@ -21,7 +24,7 @@ export default function Messages({ selectedConversation }) {
 
   useEffect(() => {
     const getMessages = async () => {
-      if (!selectedConversation) return;
+      // if (!selectedConversation) return;
 
       try {
         setLoadingMessages(true);
@@ -40,9 +43,11 @@ export default function Messages({ selectedConversation }) {
         setLoadingMessages(false);
       }
     };
+    
 
     getMessages();
-  }, [selectedConversation, setMessages]);
+
+  }, [selectedConversation, setMessages,messageReceived]);
 
   const messagesEndRef = useRef(null);
   useEffect(() => {

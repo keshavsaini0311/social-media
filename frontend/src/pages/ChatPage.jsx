@@ -16,8 +16,8 @@ function ChatPage() {
   const [conversations, setConversations] = useState([]);  
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
-  console.log(conversations );
+console.log(selectedConversation);
+  // console.log(conversations );
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
@@ -112,7 +112,7 @@ function ChatPage() {
           )}
         </div>
         <div className="w-full mx-2 text-white bg-gradient-to-r from-zinc-950 to-neutral-900 rounded-2xl">
-          {selectedConversation ? (
+          {true ? (
             <>
               <div  className="h  gap-2 rounded-2xl mx-auto w-5/6 sm:w-11/12  no-scrollbar overflow-scroll">
                 <Messages selectedConversation={selectedConversation} />
