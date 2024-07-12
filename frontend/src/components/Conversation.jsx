@@ -1,52 +1,85 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import {
+	Avatar,
+	AvatarBadge,
+	Box,
+	Flex,
+	Image,
+	Stack,
+	Text,
+	WrapItem,
+	useColorMode,
+	useColorModeValue,
+} from "@chakra-ui/react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import userAtom from "../atoms/userAtom";
+import { BsCheck2All, BsFillImageFill } from "react-icons/bs";
+import { selectedConversationAtom } from "../atoms/messagesAtom";
 
-export default function Conversation({ conversation, lastMessage }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`/api/user/${conversation}`);
-        const data = await res.json();
-        if (data.success===false) {
-          console.log(data.message);
-          setLoading(false);
-          return; 
-        }
-        setUser(data);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        setError(error.message);
-      }
-    };
+const Conversation = ({ conversation, isOnline }) => {
+	const user = conversation.participants[0];
+	const currentUser = useRecoilValue(userAtom);
+	const lastMessage = conversation.lastMessage;
+	const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
+	const colorMode = useColorMode();
 
-    fetchUser();
-  }, [conversation]);
+	console.log("selectedConverstion", selectedConversation);
+	return (
+		<Flex
+			gap={4}
+			alignItems={"center"}
+			p={"1"}
+			_hover={{
+				cursor: "pointer",
+				bg: useColorModeValue("gray.600", "gray.dark"),
+				color: "white",
+			}}
+			w={"full"}
+			onClick={() =>
+				setSelectedConversation({
+					_id: conversation._id,
+					userId: user._id,
+					userProfilePic: user.profilePic,
+					username: user.username,
+					mock: conversation.mock,
+				})
+			}
+			bg={
+				selectedConversation?._id === conversation._id ? (colorMode === "light" ? "gray.400" : "gray.dark") : ""
+			}
+			borderRadius={"md"}
+		>
+			<WrapItem>
+				<Avatar
+					size={{
+						base: "xs",
+						sm: "sm",
+						md: "md",
+					}}
+					src={user.profilePic}
+				>
+					{isOnline ? <AvatarBadge boxSize='1em' bg='green.500' /> : ""}
+				</Avatar>
+			</WrapItem>
 
-  return (
-    <div>
-      {loading && <div>Loading...</div>}
-      {error && <div>Error: {error}</div>}
-      {user && (
-        <div className="p-4 mx-2  h-28 w-48 min-w-max border border-blue-800 sm:rounded-l-lg rounded-lg bg-blue-300 hover:bg-blue-400 hover:cursor-pointer">
-          <div className="flex gap-2">
-            <img src={user.avatar} alt="profile pic" className='rounded-full w-6 h-6' />
-            <h1>{user.firstName} {user.lastName}</h1>
-          </div>
-          <p>@{user.userName}</p>
-          {lastMessage && (
-            
-            <p className='text-sm text-gray-600'>
-            {lastMessage.substring(0, 20)}{lastMessage.length > 20 && '...'}
-          </p>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
+			<Stack direction={"column"} fontSize={"sm"}>
+				<Text fontWeight='700' display={"flex"} alignItems={"center"}>
+					{user.username} <Image src='/verified.png' w={4} h={4} ml={1} />
+				</Text>
+				<Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
+					{currentUser._id === lastMessage.sender ? (
+						<Box color={lastMessage.seen ? "blue.400" : ""}>
+							<BsCheck2All size={16} />
+						</Box>
+					) : (
+						""
+					)}
+					{lastMessage.text.length > 18
+						? lastMessage.text.substring(0, 18) + "..."
+						: lastMessage.text || <BsFillImageFill size={16} />}
+				</Text>
+			</Stack>
+		</Flex>
+	);
+};
+
+export default Conversation;

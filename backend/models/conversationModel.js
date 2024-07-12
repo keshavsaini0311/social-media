@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const conversationSchema = new mongoose.Schema(
 	{
-		participants: [{ type: String }],
+		participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 		lastMessage: {
 			text: String,
 			sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

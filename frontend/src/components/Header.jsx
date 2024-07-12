@@ -1,122 +1,121 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { GrClose } from "react-icons/gr";
-import { GiHamburgerMenu } from "react-icons/gi";
+import {Box, Button, Flex, Image, Input, Link, useColorMode } from "@chakra-ui/react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import userAtom from "../atoms/userAtom";
+import { useState } from "react";
+import { AiFillHome } from "react-icons/ai";
+import { RxAvatar } from "react-icons/rx";
+import { Link as RouterLink } from "react-router-dom";
+import { FiLogOut } from "react-icons/fi";
+import useLogout from "../hooks/useLogout";
+import authScreenAtom from "../atoms/authAtom";
+import { BsFillChatQuoteFill } from "react-icons/bs";
+import { MdOutlineSettings } from "react-icons/md";
+import useShowToast from "../hooks/useShowToast";
+
 const Header = () => {
-  const user = useSelector((state) => state.user.currentUser);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [profiles, setProfiles] = useState([]);
-  const [navVisible, setNavVisible] = useState(false); // State for navigation visibility on smaller screens
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value.trim());
-    setDropdownVisible(e.target.value.trim() !== '');
-  };
+	const { colorMode, toggleColorMode } = useColorMode();
+	const showToast = useShowToast();
+	const user = useRecoilValue(userAtom);
+	const logout = useLogout();
+	const setAuthScreen = useSetRecoilState(authScreenAtom);
+	const[search , setSearch] = useState('')
+	const[profiles, setProfiles] = useState([])
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (!searchTerm || searchTerm.length < 1) {
-        setDropdownVisible(false);
-        return;
-      }
-      if (searchTerm) {
-        const response = await fetch(`/api/user/search?searchTerm=${searchTerm}`);
-        const data = await response.json();
-        setProfiles(data);
-        setDropdownVisible(true);
-      }
-    };
+	const handlechange = async(e) => {
+		setSearch(e.target.value)
+		if(search.length <= 2){
+			setProfiles([])
+			return;
+		}
+			try{
+				const res=await fetch(`/api/users/search/${search}`);
+				const data =await res.json()
+				if(data.error){
+					setProfiles([])
+					showToast("Error", data.error, "error");
+					return;
+				}
+				setProfiles(data)
+			}
+			catch(error){
+				console.log(error);
+			}
+		}
+	
 
-    fetchUsers();
-  }, [searchTerm]);
+	
+	
+	return (
+		<Flex justifyContent={"space-between"} mt={6} mb='12' >
+			{user && (
+				<Link as={RouterLink} to='/'>
+					<AiFillHome size={24} />
+				</Link>
+			)}
+			{!user && (
+				<Link as={RouterLink} to={"/auth"} onClick={() => setAuthScreen("login")}>
+					Login
+				</Link>
+			)}
+			<Image
+				cursor={"pointer"}
+				alt='logo'
+				w={6}
+				src={colorMode === "dark" ? "/light-logo.svg" : "/dark-logo.svg"}
+				onClick={toggleColorMode}
+			/>
+			<Flex flexDirection={"row"} alignItems={"center"} gap={2}>
+			
+			<Flex flexDirection={"column"} alignItems={"center"} gap={2}>
+			<Input
+				placeholder='Search'
+				variant='unstyled'
+				border={"none"}
+				outline={"none"}
+				_focusVisible={{ outline: "none" }}
+				onChange={handlechange}
+			/>
 
-  const searchRef = useRef(null);
-  const navRef = useRef(null);
+			{profiles.length > 0 && (
+				<Flex flexDirection={"column"} overflowY={"2px"} gap={1}>
+					{profiles.map(profile => (
+						<Link
+							as={RouterLink}
+							to={`/${profile.username}`}
+							key={profile._id}
+						>
+							{profile.username}
+						</Link>
+					))}
+				</Flex>
+			)}
 
-  const handleClickOutside = (event) => {
-    if (
-      searchRef.current && !searchRef.current.contains(event.target) &&
-      navRef.current && !navRef.current.contains(event.target)
-    ) {
-      setDropdownVisible(false);
-      setNavVisible(false); // Close the navigation menu when clicking outside
-    }
-  };
+			</Flex>
+			</Flex>
+			{user && (
+				<Flex alignItems={"right"} gap={4}>
+					<Link as={RouterLink} to={`/${user.username}`}>
+						<RxAvatar size={24} />
+					</Link>
+					<Link as={RouterLink} to={`/chat`}>
+						<BsFillChatQuoteFill size={20} />
+					</Link>
+					<Link as={RouterLink} to={`/settings`}>
+						<MdOutlineSettings size={20} />
+					</Link>
+					<Button size={"xs"} onClick={logout}>
+						<FiLogOut size={20} />
+					</Button>
+				</Flex>
+			)}
 
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
-
-  const toggleNav = () => {
-    setNavVisible(!navVisible);
-  };
-
-  return (
-    <header className="bg-gray-800 text-white py-4 z-50 top-0 sticky">
-      <div className="container mx-auto flex justify-between items-center px-4">
-        <h1 className="text-2xl font-bold hover:text-gray-200">
-          <Link to="/home">
-          Social Media
-          </Link>
-          </h1>
-        <div className="relative text-black mx-auto" ref={searchRef}>
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="Search profiles"
-            className="px-2 py-1 rounded bg-gray-900 text-white focus:outline-none"
-          />
-          {profiles.length > 0 && dropdownVisible && (
-            <ul className="absolute left-0 mt-2 w-full no-scrollbar bg-gray-800 text-white shadow-lg rounded-md z-10 max-h-48 overflow-y-auto">
-              {profiles.map((profile) => (
-                <li onClick={() => setDropdownVisible(false)} key={profile._id} className="px-4 py-2 hover:bg-gray-200">
-                  <Link to={`/profile/${profile._id}`} className="block">
-                    {profile.firstName + ' ' + profile.lastName} <span className="text-gray-500">{profile.userName}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-        <div className=" flex-col items-center text-right">
-
-        <nav className="sm:flex hidden items-end gap-1 font-semibold">
-        <Link to="/home" className="hover:text-gray-200 p-2 rounded-lg">Home</Link>
-          <Link to="/messages" className="hover:text-gray-200 p-2 rounded-lg">Messages</Link>
-          <Link to="/update-profile" className="hover:text-gray-200 p-2 rounded-lg">Settings</Link>
-          <Link to={`/profile/${user._id}`} className="hover:text-gray-200 p-2 rounded-lg">
-            <img src={user.avatar} alt="" className="w-8 h-8 rounded-full" />
-          </Link>
-        </nav>
-
-        <button
-          className="text-white md:hidden"
-          onClick={toggleNav}
-        >
-          {navVisible ? <GrClose /> : <GiHamburgerMenu />}
-        </button>
-        {navVisible && (
-          
-          
-          <nav className="sm:hidden flex flex-col items-end gap-1 font-semibold">
-        <Link to="/home" className="hover:text-gray-200 p-2 rounded-lg">Home</Link>
-          <Link to="/messages" className="hover:text-gray-200 p-2 rounded-lg">Messages</Link>
-          <Link to="/update-profile" className="hover:text-gray-200 p-2 rounded-lg">Settings</Link>
-          <Link to={`/profile/${user._id}`} className="hover:text-gray-200 p-2 rounded-lg">
-            <img src={user.avatar} alt="" className="w-8 h-8 rounded-full" />
-          </Link>
-        </nav>
-        )}
-        </div>
-      </div>
-    </header>
-  );
+			{!user && (
+				<Link as={RouterLink} to={"/auth"} onClick={() => setAuthScreen("signup")}>
+					Sign up
+				</Link>
+			)}
+		</Flex>
+	);
 };
 
 export default Header;

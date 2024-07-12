@@ -1,85 +1,132 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import io from 'socket.io-client';
-import {FiSend} from 'react-icons/fi'
-import { useSelector } from 'react-redux';
+import {
+	Flex,
+	Image,
+	Input,
+	InputGroup,
+	InputRightElement,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalHeader,
+	ModalOverlay,
+	Spinner,
+	useDisclosure,
+} from "@chakra-ui/react";
+import { useRef, useState } from "react";
+import { IoSendSharp } from "react-icons/io5";
+import useShowToast from "../hooks/useShowToast";
+import { conversationsAtom, selectedConversationAtom } from "../atoms/messagesAtom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { BsFillImageFill } from "react-icons/bs";
+import usePreviewImg from "../hooks/usePreviewImg";
 
+const MessageInput = ({ setMessages }) => {
+	const [messageText, setMessageText] = useState("");
+	const showToast = useShowToast();
+	const selectedConversation = useRecoilValue(selectedConversationAtom);
+	const setConversations = useSetRecoilState(conversationsAtom);
+	const imageRef = useRef(null);
+	const { onClose } = useDisclosure();
+	const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
+	const [isSending, setIsSending] = useState(false);
 
-const socket = io.connect("http://localhost:5000");
+	const handleSendMessage = async (e) => {
+		e.preventDefault();
+		if (!messageText && !imgUrl) return;
+		if (isSending) return;
 
-export default function MessageInput({ recipientId }) {
+		setIsSending(true);
 
-  const { currentUser } = useSelector((state) => state.user);
-  const [formData, setFormData] = useState({
-    message: '',
-    recipientId: recipientId.participants[0] ,
-  });
-  useEffect(() => {
-    const getuser = async () => {
-      try {
-        const res = await fetch(`/api/user/${recipientId.participants[0]}`);
-        const data = await res.json();
-        setFormData({ ...formData, recipientId: data._id });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    getuser();
-  }, [recipientId]);
+		try {
+			const res = await fetch("/api/messages", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					message: messageText,
+					recipientId: selectedConversation.userId,
+					img: imgUrl,
+				}),
+			});
+			const data = await res.json();
+			if (data.error) {
+				showToast("Error", data.error, "error");
+				return;
+			}
+			console.log(data);
+			setMessages((messages) => [...messages, data]);
 
-  useEffect(()=>{
-    console.log(recipientId._id);
-        socket.emit("join_room", recipientId._id);
-  },[recipientId]);
-  
-  const handleSubmit = async (e) => {
-    
-      const id=recipientId._id;
-     const message = formData.message;
-     const sender=currentUser._id
-      socket.emit("send_message", { message, id, sender });
-    
-  
+			setConversations((prevConvs) => {
+				const updatedConversations = prevConvs.map((conversation) => {
+					if (conversation._id === selectedConversation._id) {
+						return {
+							...conversation,
+							lastMessage: {
+								text: messageText,
+								sender: data.sender,
+							},
+						};
+					}
+					return conversation;
+				});
+				return updatedConversations;
+			});
+			setMessageText("");
+			setImgUrl("");
+		} catch (error) {
+			showToast("Error", error.message, "error");
+		} finally {
+			setIsSending(false);
+		}
+	};
+	return (
+		<Flex gap={2} alignItems={"center"}>
+			<form onSubmit={handleSendMessage} style={{ flex: 95 }}>
+				<InputGroup>
+					<Input
+						w={"full"}
+						placeholder='Type a message'
+						onChange={(e) => setMessageText(e.target.value)}
+						value={messageText}
+					/>
+					<InputRightElement onClick={handleSendMessage} cursor={"pointer"}>
+						<IoSendSharp />
+					</InputRightElement>
+				</InputGroup>
+			</form>
+			<Flex flex={5} cursor={"pointer"}>
+				<BsFillImageFill size={20} onClick={() => imageRef.current.click()} />
+				<Input type={"file"} hidden ref={imageRef} onChange={handleImageChange} />
+			</Flex>
+			<Modal
+				isOpen={imgUrl}
+				onClose={() => {
+					onClose();
+					setImgUrl("");
+				}}
+			>
+				<ModalOverlay />
+				<ModalContent>
+					<ModalHeader></ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<Flex mt={5} w={"full"}>
+							<Image src={imgUrl} />
+						</Flex>
+						<Flex justifyContent={"flex-end"} my={2}>
+							{!isSending ? (
+								<IoSendSharp size={24} cursor={"pointer"} onClick={handleSendMessage} />
+							) : (
+								<Spinner size={"md"} />
+							)}
+						</Flex>
+					</ModalBody>
+				</ModalContent>
+			</Modal>
+		</Flex>
+	);
+};
 
-    e.preventDefault();
-    try {
-      const res = await fetch('/api/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (data.success===false) {
-        console.log(data);
-        return;
-      }
-      setFormData({ ...formData, message: '' });
-      
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  return (
-    <form  onSubmit={handleSubmit}>
-      <div className="">
-
-      <div className='text-black   w-full flex'>
-        <input
-          type="text"
-          value={formData.message}
-          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-          className=' outline-none bg-gray-50 p-1.5 w-full rounded-lg'
-          placeholder="Type a message..."
-          />
-        <div className="text-right m-1 p-2 rounded-full bg-slate-200">
-          <button type="submit" className='text-right text-blue-600'> <FiSend /></button>
-          </div>
-        </div>
-      </div>
-    </form>
-  );
-}
+export default MessageInput;
