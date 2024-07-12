@@ -1,4 +1,4 @@
-import {Box, Button, Flex, Image, Input, Link, useColorMode } from "@chakra-ui/react";
+import { Button, Flex, Image, Input, Link, useColorMode } from "@chakra-ui/react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { useState } from "react";
